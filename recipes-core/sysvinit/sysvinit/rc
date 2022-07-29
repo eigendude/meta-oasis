@@ -14,7 +14,7 @@
 #
 # Version:	@(#)rc  2.78  07-Nov-1999  miquels@cistron.nl
 #
-# Modified for angstrom splash screens
+# Modified for OASIS splash screens
 
 . /etc/default/rcS
 if [ -f /etc/default/splashfuncs ]; then

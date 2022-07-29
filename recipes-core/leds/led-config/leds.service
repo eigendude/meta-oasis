@@ -1,5 +1,5 @@
 [Unit]
-Description=Angstrom LED config
+Description=OASIS LED config
 ConditionPathExists=|/sys/class/leds
 After=remount-rootfs.service
 

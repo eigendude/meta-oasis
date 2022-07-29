@@ -1,7 +1,7 @@
 Fix configure errors e.g.
 
-| /home/kraj/work/angstrom-repo/build/tmp-angstrom_next-eglibc/work/armv7at2hf-vfp-neon-angstrom-linux-gnueabi/ranpwd/1.2+gitAUTOINC+b62aab579e-r0/git/configure: line 2866: syntax error near unexpected token `-Wall'
-| /home/kraj/work/angstrom-repo/build/tmp-angstrom_next-eglibc/work/armv7at2hf-vfp-neon-angstrom-linux-gnueabi/ranpwd/1.2+gitAUTOINC+b62aab579e-r0/git/configure: line 2866: `PA_ADD_CFLAGS(-Wall)'
+| /home/kraj/work/oasis-repo/build/tmp-oasis_next-eglibc/work/armv7at2hf-vfp-neon-oasis-linux-gnueabi/ranpwd/1.2+gitAUTOINC+b62aab579e-r0/git/configure: line 2866: syntax error near unexpected token `-Wall'
+| /home/kraj/work/oasis-repo/build/tmp-oasis_next-eglibc/work/armv7at2hf-vfp-neon-oasis-linux-gnueabi/ranpwd/1.2+gitAUTOINC+b62aab579e-r0/git/configure: line 2866: `PA_ADD_CFLAGS(-Wall)'
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Upstream-Status: Pending

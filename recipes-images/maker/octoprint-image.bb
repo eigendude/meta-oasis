@@ -1,6 +1,6 @@
-#Angstrom image for 3d printing
+# OASIS image for 3d printing
 
-require recipes-images/angstrom/systemd-image.bb
+require recipes-images/oasis/systemd-image.bb
 
 IMAGE_INSTALL += " \
         octoprint-nginx \

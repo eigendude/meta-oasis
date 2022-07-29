@@ -75,8 +75,8 @@ do
                       opkg-native \
                       abiword \
                       aircrack-ng \
-                      angstrom-packagegroup-gnome \
-                      angstrom-zeroconf-audio \
+                      oasis-packagegroup-gnome \
+                      oasis-zeroconf-audio \
                       apache2 \
                       artoolkit \
                       asciidoc \
@@ -436,7 +436,7 @@ do
             BUILD_CLEAN="qmake-native qmake2-native qt-x11-free python python-native python-pygtk gnome-icon-theme"
         BUILD_TARGETS="packagegroup-base packagegroup-boot \
                        packagegroup-opie packagegroup-opie-all \
-                       angstrom-x11-base-depends angstrom-gpe-packagegroup-settings \
+                       oasis-x11-base-depends oasis-gpe-packagegroup-settings \
                        xserver-xorg-conf \ 
                        "
 
