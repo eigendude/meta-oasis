@@ -1,0 +1,818 @@
+From 6473b089edf3cf36845740b62dc4bdd7d6ff7a01 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <eigendebugger@gmail.com>
+Date: Tue, 17 Sep 2024 22:39:47 -0700
+Subject: [PATCH] Remove cv::imshow() calls inside of algorithms
+
+---
+ .../algorithms/AdaptiveBackgroundLearning.cpp     |  7 -------
+ .../AdaptiveSelectiveBackgroundLearning.cpp       |  7 -------
+ bgslibrary/algorithms/CodeBook.cpp                |  7 -------
+ bgslibrary/algorithms/DPAdaptiveMedian.cpp        |  7 -------
+ bgslibrary/algorithms/DPEigenbackground.cpp       |  5 -----
+ bgslibrary/algorithms/DPGrimsonGMM.cpp            |  5 -----
+ bgslibrary/algorithms/DPMean.cpp                  |  5 -----
+ bgslibrary/algorithms/DPPratiMediod.cpp           |  7 -------
+ bgslibrary/algorithms/DPTexture.cpp               |  5 -----
+ bgslibrary/algorithms/DPWrenGA.cpp                |  5 -----
+ bgslibrary/algorithms/DPZivkovicAGMM.cpp          |  5 -----
+ bgslibrary/algorithms/FrameDifference.cpp         |  5 -----
+ bgslibrary/algorithms/FuzzyChoquetIntegral.cpp    | 15 ---------------
+ bgslibrary/algorithms/FuzzySugenoIntegral.cpp     | 15 ---------------
+ bgslibrary/algorithms/GMG.cpp                     |  7 -------
+ bgslibrary/algorithms/IndependentMultimodal.cpp   |  7 -------
+ bgslibrary/algorithms/KDE.cpp                     |  5 -----
+ bgslibrary/algorithms/KNN.cpp                     |  7 -------
+ bgslibrary/algorithms/LBAdaptiveSOM.cpp           |  7 -------
+ bgslibrary/algorithms/LBFuzzyAdaptiveSOM.cpp      |  7 -------
+ bgslibrary/algorithms/LBFuzzyGaussian.cpp         |  7 -------
+ bgslibrary/algorithms/LBMixtureOfGaussians.cpp    |  7 -------
+ bgslibrary/algorithms/LBP_MRF.cpp                 |  5 -----
+ bgslibrary/algorithms/LBSimpleGaussian.cpp        |  7 -------
+ bgslibrary/algorithms/LOBSTER.cpp                 |  7 -------
+ bgslibrary/algorithms/MixtureOfGaussianV1.cpp     |  7 -------
+ bgslibrary/algorithms/MixtureOfGaussianV2.cpp     |  7 -------
+ bgslibrary/algorithms/MultiCue.cpp                |  5 -----
+ bgslibrary/algorithms/MultiLayer.cpp              |  7 -------
+ bgslibrary/algorithms/PAWCS.cpp                   |  7 -------
+ .../algorithms/PixelBasedAdaptiveSegmenter.cpp    |  5 -----
+ bgslibrary/algorithms/SigmaDelta.cpp              |  5 -----
+ bgslibrary/algorithms/StaticFrameDifference.cpp   |  5 -----
+ bgslibrary/algorithms/SuBSENSE.cpp                |  7 -------
+ bgslibrary/algorithms/T2FGMM_UM.cpp               |  5 -----
+ bgslibrary/algorithms/T2FGMM_UV.cpp               |  5 -----
+ bgslibrary/algorithms/T2FMRF_UM.cpp               |  5 -----
+ bgslibrary/algorithms/T2FMRF_UV.cpp               |  5 -----
+ bgslibrary/algorithms/TwoPoints.cpp               |  5 -----
+ bgslibrary/algorithms/ViBe.cpp                    |  5 -----
+ bgslibrary/algorithms/VuMeter.cpp                 |  7 -------
+ bgslibrary/algorithms/WeightedMovingMean.cpp      |  7 -------
+ bgslibrary/algorithms/WeightedMovingVariance.cpp  |  5 -----
+ 43 files changed, 277 deletions(-)
+
+diff --git a/bgslibrary/algorithms/AdaptiveBackgroundLearning.cpp b/bgslibrary/algorithms/AdaptiveBackgroundLearning.cpp
+index d239dd0..d500c42 100644
+--- a/bgslibrary/algorithms/AdaptiveBackgroundLearning.cpp
++++ b/bgslibrary/algorithms/AdaptiveBackgroundLearning.cpp
+@@ -52,13 +52,6 @@ void AdaptiveBackgroundLearning::process(const cv::Mat &img_input, cv::Mat &img_
+   if (enableThreshold)
+     cv::threshold(img_foreground, img_foreground, threshold, 255, cv::THRESH_BINARY);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/AdaptiveSelectiveBackgroundLearning.cpp b/bgslibrary/algorithms/AdaptiveSelectiveBackgroundLearning.cpp
+index 84893b0..7d89624 100644
+--- a/bgslibrary/algorithms/AdaptiveSelectiveBackgroundLearning.cpp
++++ b/bgslibrary/algorithms/AdaptiveSelectiveBackgroundLearning.cpp
+@@ -67,13 +67,6 @@ void AdaptiveSelectiveBackgroundLearning::process(const cv::Mat &img_input_, cv:
+   img_background_f.convertTo(img_background, CV_8UC1, 255.0 / (maxVal - minVal), -minVal);
+   //img_new_background.copyTo(img_background);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/CodeBook.cpp b/bgslibrary/algorithms/CodeBook.cpp
+index f7aa828..e348171 100644
+--- a/bgslibrary/algorithms/CodeBook.cpp
++++ b/bgslibrary/algorithms/CodeBook.cpp
+@@ -34,13 +34,6 @@ void CodeBook::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &i
+ 
+   fg_cb(img_input_gray, img_foreground);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    //cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   //img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/DPAdaptiveMedian.cpp b/bgslibrary/algorithms/DPAdaptiveMedian.cpp
+index 45d4044..89f0c3a 100644
+--- a/bgslibrary/algorithms/DPAdaptiveMedian.cpp
++++ b/bgslibrary/algorithms/DPAdaptiveMedian.cpp
+@@ -52,13 +52,6 @@ void DPAdaptiveMedian::process(const cv::Mat &img_input, cv::Mat &img_output, cv
+   // bitwise_not(img_foreground, img_foreground);
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/DPEigenbackground.cpp b/bgslibrary/algorithms/DPEigenbackground.cpp
+index 9442be1..04ef5ab 100644
+--- a/bgslibrary/algorithms/DPEigenbackground.cpp
++++ b/bgslibrary/algorithms/DPEigenbackground.cpp
+@@ -54,11 +54,6 @@ void DPEigenbackground::process(const cv::Mat &img_input, cv::Mat &img_output, c
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+   //img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/DPGrimsonGMM.cpp b/bgslibrary/algorithms/DPGrimsonGMM.cpp
+index ff3e16d..fba7c38 100644
+--- a/bgslibrary/algorithms/DPGrimsonGMM.cpp
++++ b/bgslibrary/algorithms/DPGrimsonGMM.cpp
+@@ -53,11 +53,6 @@ void DPGrimsonGMM::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Ma
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+   //img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/DPMean.cpp b/bgslibrary/algorithms/DPMean.cpp
+index caa17e4..c053881 100644
+--- a/bgslibrary/algorithms/DPMean.cpp
++++ b/bgslibrary/algorithms/DPMean.cpp
+@@ -53,11 +53,6 @@ void DPMean::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &img
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+   //img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/DPPratiMediod.cpp b/bgslibrary/algorithms/DPPratiMediod.cpp
+index c7bfada..98bdbea 100644
+--- a/bgslibrary/algorithms/DPPratiMediod.cpp
++++ b/bgslibrary/algorithms/DPPratiMediod.cpp
+@@ -52,13 +52,6 @@ void DPPratiMediod::process(const cv::Mat &img_input, cv::Mat &img_output, cv::M
+   img_foreground = cv::cvarrToMat(highThresholdMask.Ptr());
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/DPTexture.cpp b/bgslibrary/algorithms/DPTexture.cpp
+index 920baf6..35b2322 100644
+--- a/bgslibrary/algorithms/DPTexture.cpp
++++ b/bgslibrary/algorithms/DPTexture.cpp
+@@ -103,11 +103,6 @@ void DPTexture::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &
+   //img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+   img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/DPWrenGA.cpp b/bgslibrary/algorithms/DPWrenGA.cpp
+index bb92f2f..4b1f016 100644
+--- a/bgslibrary/algorithms/DPWrenGA.cpp
++++ b/bgslibrary/algorithms/DPWrenGA.cpp
+@@ -52,11 +52,6 @@ void DPWrenGA::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &i
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+   //img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/DPZivkovicAGMM.cpp b/bgslibrary/algorithms/DPZivkovicAGMM.cpp
+index 9ba3565..5df8138 100644
+--- a/bgslibrary/algorithms/DPZivkovicAGMM.cpp
++++ b/bgslibrary/algorithms/DPZivkovicAGMM.cpp
+@@ -52,11 +52,6 @@ void DPZivkovicAGMM::process(const cv::Mat &img_input, cv::Mat &img_output, cv::
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+   //img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/FrameDifference.cpp b/bgslibrary/algorithms/FrameDifference.cpp
+index 197aac4..435a1f1 100644
+--- a/bgslibrary/algorithms/FrameDifference.cpp
++++ b/bgslibrary/algorithms/FrameDifference.cpp
+@@ -31,11 +31,6 @@ void FrameDifference::process(const cv::Mat &img_input, cv::Mat &img_output, cv:
+   if (enableThreshold)
+     cv::threshold(img_foreground, img_foreground, threshold, 255, cv::THRESH_BINARY);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+ 
+   img_input.copyTo(img_background);
+diff --git a/bgslibrary/algorithms/FuzzyChoquetIntegral.cpp b/bgslibrary/algorithms/FuzzyChoquetIntegral.cpp
+index 09e3b68..4a83bd3 100644
+--- a/bgslibrary/algorithms/FuzzyChoquetIntegral.cpp
++++ b/bgslibrary/algorithms/FuzzyChoquetIntegral.cpp
+@@ -57,11 +57,6 @@ void FuzzyChoquetIntegral::process(const cv::Mat &img_input, cv::Mat &img_output
+ 
+     img_foreground = cv::Mat::zeros(img_input.size(), img_input.type());
+     img_foreground.copyTo(img_output);
+-
+-#ifndef MEX_COMPILE_FLAG
+-    if (showOutput)
+-      cv::imshow(algorithmName + "_BG", img_background);
+-#endif
+   }
+   else
+   {
+@@ -131,16 +126,6 @@ void FuzzyChoquetIntegral::process(const cv::Mat &img_input, cv::Mat &img_output
+     img_background_f3.convertTo(img_background, CV_8U, 255.0 / (maxVal - minVal), -minVal);
+     img_background.copyTo(img_bgmodel);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-    if (showOutput) {
+-      cv::imshow(algorithmName + "_LBP_IN", cv::cvarrToMat(lbp_input_f1));
+-      cv::imshow(algorithmName + "_LBP_BG", cv::cvarrToMat(lbp_background_f1));
+-      cv::imshow(algorithmName + "_FG_PROB", cv::cvarrToMat(integral_choquet_f1));
+-      cv::imshow(algorithmName + "_BG", img_background);
+-      cv::imshow(algorithmName + "_FG", img_foreground);
+-    }
+-#endif
+-
+     if (frameNumber == (framesToLearn + 1))
+       std::cout << algorithmName + " updating background model by adaptive-selective learning" << std::endl;
+ 
+diff --git a/bgslibrary/algorithms/FuzzySugenoIntegral.cpp b/bgslibrary/algorithms/FuzzySugenoIntegral.cpp
+index c4b96da..84701cd 100644
+--- a/bgslibrary/algorithms/FuzzySugenoIntegral.cpp
++++ b/bgslibrary/algorithms/FuzzySugenoIntegral.cpp
+@@ -56,11 +56,6 @@ void FuzzySugenoIntegral::process(const cv::Mat &img_input, cv::Mat &img_output,
+ 
+     img_foreground = cv::Mat::zeros(img_input.size(), img_input.type());
+     img_foreground.copyTo(img_output);
+-
+-#ifndef MEX_COMPILE_FLAG
+-    if (showOutput)
+-      cv::imshow(algorithmName + "_BG", img_background);
+-#endif
+   }
+   else
+   {
+@@ -130,16 +125,6 @@ void FuzzySugenoIntegral::process(const cv::Mat &img_input, cv::Mat &img_output,
+     img_background_f3.convertTo(img_background, CV_8U, 255.0 / (maxVal - minVal), -minVal);
+     img_background.copyTo(img_bgmodel);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-    if (showOutput) {
+-      cv::imshow(algorithmName + "_LBP_IN", cv::cvarrToMat(lbp_input_f1));
+-      cv::imshow(algorithmName + "_LBP_BG", cv::cvarrToMat(lbp_background_f1));
+-      cv::imshow(algorithmName + "_FG_PROB", cv::cvarrToMat(integral_sugeno_f1));
+-      cv::imshow(algorithmName + "_BG", img_background);
+-      cv::imshow(algorithmName + "_FG", img_foreground);
+-    }
+-#endif
+-
+     if (frameNumber == (framesToLearn + 1))
+       std::cout << algorithmName + " updating background model by adaptive-selective learning" << std::endl;
+ 
+diff --git a/bgslibrary/algorithms/GMG.cpp b/bgslibrary/algorithms/GMG.cpp
+index 6abe1f4..5365d37 100644
+--- a/bgslibrary/algorithms/GMG.cpp
++++ b/bgslibrary/algorithms/GMG.cpp
+@@ -42,13 +42,6 @@ void GMG::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &img_bg
+   img_input.copyTo(img_segmentation);
+   cv::add(img_input, cv::Scalar(100, 100, 0), img_segmentation, img_foreground);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/IndependentMultimodal.cpp b/bgslibrary/algorithms/IndependentMultimodal.cpp
+index 6297f01..ffcda32 100644
+--- a/bgslibrary/algorithms/IndependentMultimodal.cpp
++++ b/bgslibrary/algorithms/IndependentMultimodal.cpp
+@@ -28,13 +28,6 @@ void IndependentMultimodal::process(const cv::Mat &img_input, cv::Mat &img_outpu
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   firstTime = false;
+ }
+ 
+diff --git a/bgslibrary/algorithms/KDE.cpp b/bgslibrary/algorithms/KDE.cpp
+index faca1ef..1a8bca8 100644
+--- a/bgslibrary/algorithms/KDE.cpp
++++ b/bgslibrary/algorithms/KDE.cpp
+@@ -72,11 +72,6 @@ void KDE::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &img_bg
+     img_foreground.data = FGImage;
+   }
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ }
+diff --git a/bgslibrary/algorithms/KNN.cpp b/bgslibrary/algorithms/KNN.cpp
+index 33f5cd0..2427365 100644
+--- a/bgslibrary/algorithms/KNN.cpp
++++ b/bgslibrary/algorithms/KNN.cpp
+@@ -44,13 +44,6 @@ void KNN::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &img_bg
+   knn->apply(img_input, img_foreground);
+   knn->getBackgroundImage(img_background);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/LBAdaptiveSOM.cpp b/bgslibrary/algorithms/LBAdaptiveSOM.cpp
+index ba98689..23836a9 100644
+--- a/bgslibrary/algorithms/LBAdaptiveSOM.cpp
++++ b/bgslibrary/algorithms/LBAdaptiveSOM.cpp
+@@ -43,13 +43,6 @@ void LBAdaptiveSOM::process(const cv::Mat &img_input, cv::Mat &img_output, cv::M
+   img_foreground = cv::cvarrToMat(m_pBGModel->GetFG());
+   img_background = cv::cvarrToMat(m_pBGModel->GetBG());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   cvReleaseImage(&frame);
+diff --git a/bgslibrary/algorithms/LBFuzzyAdaptiveSOM.cpp b/bgslibrary/algorithms/LBFuzzyAdaptiveSOM.cpp
+index e907f7c..5b27467 100644
+--- a/bgslibrary/algorithms/LBFuzzyAdaptiveSOM.cpp
++++ b/bgslibrary/algorithms/LBFuzzyAdaptiveSOM.cpp
+@@ -42,13 +42,6 @@ void LBFuzzyAdaptiveSOM::process(const cv::Mat &img_input, cv::Mat &img_output,
+   img_foreground = cv::cvarrToMat(m_pBGModel->GetFG());
+   img_background = cv::cvarrToMat(m_pBGModel->GetBG());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   cvReleaseImage(&frame);
+diff --git a/bgslibrary/algorithms/LBFuzzyGaussian.cpp b/bgslibrary/algorithms/LBFuzzyGaussian.cpp
+index a2846a1..dbd7753 100644
+--- a/bgslibrary/algorithms/LBFuzzyGaussian.cpp
++++ b/bgslibrary/algorithms/LBFuzzyGaussian.cpp
+@@ -41,13 +41,6 @@ void LBFuzzyGaussian::process(const cv::Mat &img_input, cv::Mat &img_output, cv:
+   img_foreground = cv::cvarrToMat(m_pBGModel->GetFG());
+   img_background = cv::cvarrToMat(m_pBGModel->GetBG());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   cvReleaseImage(&frame);
+diff --git a/bgslibrary/algorithms/LBMixtureOfGaussians.cpp b/bgslibrary/algorithms/LBMixtureOfGaussians.cpp
+index e57609d..06f810a 100644
+--- a/bgslibrary/algorithms/LBMixtureOfGaussians.cpp
++++ b/bgslibrary/algorithms/LBMixtureOfGaussians.cpp
+@@ -41,13 +41,6 @@ void LBMixtureOfGaussians::process(const cv::Mat &img_input, cv::Mat &img_output
+   img_foreground = cv::cvarrToMat(m_pBGModel->GetFG());
+   img_background = cv::cvarrToMat(m_pBGModel->GetBG());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   cvReleaseImage(&frame);
+diff --git a/bgslibrary/algorithms/LBP_MRF.cpp b/bgslibrary/algorithms/LBP_MRF.cpp
+index 572a14b..6e474c7 100644
+--- a/bgslibrary/algorithms/LBP_MRF.cpp
++++ b/bgslibrary/algorithms/LBP_MRF.cpp
+@@ -36,11 +36,6 @@ void LBP_MRF::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &im
+   //bitwise_not(img_foreground, img_background);
+   img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/LBSimpleGaussian.cpp b/bgslibrary/algorithms/LBSimpleGaussian.cpp
+index 65e638f..3a1aa0f 100644
+--- a/bgslibrary/algorithms/LBSimpleGaussian.cpp
++++ b/bgslibrary/algorithms/LBSimpleGaussian.cpp
+@@ -39,13 +39,6 @@ void LBSimpleGaussian::process(const cv::Mat &img_input, cv::Mat &img_output, cv
+   img_foreground = cv::cvarrToMat(m_pBGModel->GetFG());
+   img_background = cv::cvarrToMat(m_pBGModel->GetBG());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   cvReleaseImage(&frame);
+diff --git a/bgslibrary/algorithms/LOBSTER.cpp b/bgslibrary/algorithms/LOBSTER.cpp
+index 2a03c10..649f610 100644
+--- a/bgslibrary/algorithms/LOBSTER.cpp
++++ b/bgslibrary/algorithms/LOBSTER.cpp
+@@ -38,13 +38,6 @@ void LOBSTER::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &im
+   pLOBSTER->apply(img_input, img_foreground);
+   pLOBSTER->getBackgroundImage(img_background);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ }
+diff --git a/bgslibrary/algorithms/MixtureOfGaussianV1.cpp b/bgslibrary/algorithms/MixtureOfGaussianV1.cpp
+index d2cb1bb..25b8c63 100644
+--- a/bgslibrary/algorithms/MixtureOfGaussianV1.cpp
++++ b/bgslibrary/algorithms/MixtureOfGaussianV1.cpp
+@@ -44,13 +44,6 @@ void MixtureOfGaussianV1::process(const cv::Mat &img_input, cv::Mat &img_output,
+   if (img_background.empty())
+     img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/MixtureOfGaussianV2.cpp b/bgslibrary/algorithms/MixtureOfGaussianV2.cpp
+index 50244fb..4b91f48 100644
+--- a/bgslibrary/algorithms/MixtureOfGaussianV2.cpp
++++ b/bgslibrary/algorithms/MixtureOfGaussianV2.cpp
+@@ -52,13 +52,6 @@ void MixtureOfGaussianV2::process(const cv::Mat &img_input, cv::Mat &img_output,
+   if (enableThreshold)
+     cv::threshold(img_foreground, img_foreground, threshold, 255, cv::THRESH_BINARY);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/MultiCue.cpp b/bgslibrary/algorithms/MultiCue.cpp
+index 5c55ab2..ce82f99 100644
+--- a/bgslibrary/algorithms/MultiCue.cpp
++++ b/bgslibrary/algorithms/MultiCue.cpp
+@@ -101,11 +101,6 @@ void MultiCue::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &i
+   cvReleaseImage(&result_image);
+   cvReleaseImage(&frame);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/MultiLayer.cpp b/bgslibrary/algorithms/MultiLayer.cpp
+index 2d2c6e6..8e2a105 100644
+--- a/bgslibrary/algorithms/MultiLayer.cpp
++++ b/bgslibrary/algorithms/MultiLayer.cpp
+@@ -197,13 +197,6 @@ void MultiLayer::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat
+   img_foreground = cv::cvarrToMat(fg_mask_img);
+   img_background = cv::cvarrToMat(bg_img);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_LAYERS", img_merged);
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   cvReleaseImage(&img);
+diff --git a/bgslibrary/algorithms/PAWCS.cpp b/bgslibrary/algorithms/PAWCS.cpp
+index aab37c7..d6aa8ab 100644
+--- a/bgslibrary/algorithms/PAWCS.cpp
++++ b/bgslibrary/algorithms/PAWCS.cpp
+@@ -37,13 +37,6 @@ void PAWCS::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &img_
+   pPAWCS->apply(img_input, img_foreground);
+   pPAWCS->getBackgroundImage(img_background);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ }
+diff --git a/bgslibrary/algorithms/PixelBasedAdaptiveSegmenter.cpp b/bgslibrary/algorithms/PixelBasedAdaptiveSegmenter.cpp
+index c03f734..dab945b 100644
+--- a/bgslibrary/algorithms/PixelBasedAdaptiveSegmenter.cpp
++++ b/bgslibrary/algorithms/PixelBasedAdaptiveSegmenter.cpp
+@@ -47,11 +47,6 @@ void PixelBasedAdaptiveSegmenter::process(const cv::Mat &img_input, cv::Mat &img
+   if (enableOutputBlur)
+     cv::medianBlur(img_foreground, img_foreground, 5);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/SigmaDelta.cpp b/bgslibrary/algorithms/SigmaDelta.cpp
+index 1e17b37..3af44d0 100644
+--- a/bgslibrary/algorithms/SigmaDelta.cpp
++++ b/bgslibrary/algorithms/SigmaDelta.cpp
+@@ -41,11 +41,6 @@ void SigmaDelta::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat
+     }
+   }
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ }
+diff --git a/bgslibrary/algorithms/StaticFrameDifference.cpp b/bgslibrary/algorithms/StaticFrameDifference.cpp
+index 54dbc07..45abcfa 100644
+--- a/bgslibrary/algorithms/StaticFrameDifference.cpp
++++ b/bgslibrary/algorithms/StaticFrameDifference.cpp
+@@ -29,11 +29,6 @@ void StaticFrameDifference::process(const cv::Mat &img_input, cv::Mat &img_outpu
+   if (enableThreshold)
+     cv::threshold(img_foreground, img_foreground, threshold, 255, cv::THRESH_BINARY);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/SuBSENSE.cpp b/bgslibrary/algorithms/SuBSENSE.cpp
+index c942902..b350eaa 100644
+--- a/bgslibrary/algorithms/SuBSENSE.cpp
++++ b/bgslibrary/algorithms/SuBSENSE.cpp
+@@ -38,13 +38,6 @@ void SuBSENSE::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &i
+   pSubsense->apply(img_input, img_foreground);
+   pSubsense->getBackgroundImage(img_background);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ }
+diff --git a/bgslibrary/algorithms/T2FGMM_UM.cpp b/bgslibrary/algorithms/T2FGMM_UM.cpp
+index ab25314..6a87150 100644
+--- a/bgslibrary/algorithms/T2FGMM_UM.cpp
++++ b/bgslibrary/algorithms/T2FGMM_UM.cpp
+@@ -55,11 +55,6 @@ void T2FGMM_UM::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+   //img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/T2FGMM_UV.cpp b/bgslibrary/algorithms/T2FGMM_UV.cpp
+index 8552c5d..c186a47 100644
+--- a/bgslibrary/algorithms/T2FGMM_UV.cpp
++++ b/bgslibrary/algorithms/T2FGMM_UV.cpp
+@@ -55,11 +55,6 @@ void T2FGMM_UV::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+   //img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/T2FMRF_UM.cpp b/bgslibrary/algorithms/T2FMRF_UM.cpp
+index d787582..d1ce941 100644
+--- a/bgslibrary/algorithms/T2FMRF_UM.cpp
++++ b/bgslibrary/algorithms/T2FMRF_UM.cpp
+@@ -86,11 +86,6 @@ void T2FMRF_UM::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+   //img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/T2FMRF_UV.cpp b/bgslibrary/algorithms/T2FMRF_UV.cpp
+index 2911dbe..1e4dcb0 100644
+--- a/bgslibrary/algorithms/T2FMRF_UV.cpp
++++ b/bgslibrary/algorithms/T2FMRF_UV.cpp
+@@ -85,11 +85,6 @@ void T2FMRF_UV::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &
+   img_background = cv::cvarrToMat(bgs.Background()->Ptr());
+   //img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   frame_data.ReleaseImage();
+diff --git a/bgslibrary/algorithms/TwoPoints.cpp b/bgslibrary/algorithms/TwoPoints.cpp
+index 6b554ea..de9d264 100644
+--- a/bgslibrary/algorithms/TwoPoints.cpp
++++ b/bgslibrary/algorithms/TwoPoints.cpp
+@@ -60,11 +60,6 @@ void TwoPoints::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &
+ 
+   twopoints::libtwopointsModel_Update_8u_C1R(model, img_input_grayscale.data, updatingMask.data);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_output);
+-#endif
+-
+   firstTime = false;
+ }
+ 
+diff --git a/bgslibrary/algorithms/ViBe.cpp b/bgslibrary/algorithms/ViBe.cpp
+index 460b926..bb84a88 100644
+--- a/bgslibrary/algorithms/ViBe.cpp
++++ b/bgslibrary/algorithms/ViBe.cpp
+@@ -46,11 +46,6 @@ void ViBe::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &img_b
+   //vibe::libvibeModel_Sequential_Update_8u_C3R(model, model_img_input.data, img_output.data);
+   vibe::libvibeModel_Sequential_Update_8u_C3R(model, img_input.data, img_output.data);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_output);
+-#endif
+-
+   firstTime = false;
+ }
+ 
+diff --git a/bgslibrary/algorithms/VuMeter.cpp b/bgslibrary/algorithms/VuMeter.cpp
+index e480343..be423f8 100644
+--- a/bgslibrary/algorithms/VuMeter.cpp
++++ b/bgslibrary/algorithms/VuMeter.cpp
+@@ -54,13 +54,6 @@ void VuMeter::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &im
+     cv::medianBlur(img_foreground, img_foreground, 5);
+   }
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+   cvReleaseImage(&frame);
+diff --git a/bgslibrary/algorithms/WeightedMovingMean.cpp b/bgslibrary/algorithms/WeightedMovingMean.cpp
+index 3d7d961..41156a1 100644
+--- a/bgslibrary/algorithms/WeightedMovingMean.cpp
++++ b/bgslibrary/algorithms/WeightedMovingMean.cpp
+@@ -57,13 +57,6 @@ void WeightedMovingMean::process(const cv::Mat &img_input, cv::Mat &img_output,
+   if (enableThreshold)
+     cv::threshold(img_foreground, img_foreground, threshold, 255, cv::THRESH_BINARY);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput) {
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-    cv::imshow(algorithmName + "_BG", img_background);
+-  }
+-#endif
+-
+   img_foreground.copyTo(img_output);
+   img_background.copyTo(img_bgmodel);
+ 
+diff --git a/bgslibrary/algorithms/WeightedMovingVariance.cpp b/bgslibrary/algorithms/WeightedMovingVariance.cpp
+index d9273c8..3a10d88 100644
+--- a/bgslibrary/algorithms/WeightedMovingVariance.cpp
++++ b/bgslibrary/algorithms/WeightedMovingVariance.cpp
+@@ -82,11 +82,6 @@ void WeightedMovingVariance::process(const cv::Mat &img_input, cv::Mat &img_outp
+   if (enableThreshold)
+     cv::threshold(img_foreground, img_foreground, threshold, 255, cv::THRESH_BINARY);
+ 
+-#ifndef MEX_COMPILE_FLAG
+-  if (showOutput)
+-    cv::imshow(algorithmName + "_FG", img_foreground);
+-#endif
+-
+   img_foreground.copyTo(img_output);
+ 
+   img_background = cv::Mat::zeros(img_input.size(), img_input.type());
+-- 
+2.34.1
+
