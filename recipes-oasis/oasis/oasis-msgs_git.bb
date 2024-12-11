@@ -14,3 +14,6 @@ RDEPENDS:${PN}:append = " \
     sensor-msgs \
     std-msgs \
 "
+
+# TODO: Fixes bitbake error
+INSANE_SKIP:${PN} += "dev-deps"
