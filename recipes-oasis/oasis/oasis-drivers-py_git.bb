@@ -1,7 +1,6 @@
 require oasis-ament-python.inc
 
 SRC_URI:append = " \
-    file://0001-drivers_py-Fix-install-paths-for-data-files.patch \
     file://0001-drivers_py-Update-systemd-service-for-Yocto.patch \
 "
 
