@@ -1,6 +1,6 @@
 ################################################################################
 #
-# Basic image with smarthome functionality
+# Basic image with smarthome functionality with OASIS
 #
 ################################################################################
 
