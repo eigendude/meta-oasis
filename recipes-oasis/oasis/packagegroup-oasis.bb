@@ -11,7 +11,8 @@ RDEPENDS:${PN} = " \
     oasis-drivers-cpp \
     oasis-drivers-py \
     oasis-msgs \
-    oasis-perception \
+    oasis-perception-cpp \
+    oasis-perception-py \
 "
 
 # Also include the full suite of core ros tools

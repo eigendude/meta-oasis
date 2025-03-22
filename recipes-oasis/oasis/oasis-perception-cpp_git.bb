@@ -1,7 +1,7 @@
 require oasis-ament-cmake.inc
 
 ROS_CN = "oasis"
-ROS_BPN = "oasis_perception"
+ROS_BPN = "oasis_perception_cpp"
 
 DEPENDS:append = " \
     bgslibrary \
