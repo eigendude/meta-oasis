@@ -1,7 +1,7 @@
 require oasis-ament-python.inc
 
 SRC_URI:append = " \
-    file://0001-drivers_py-Update-systemd-service-for-Yocto.patch \
+    file://oasis_drivers.service \
 "
 
 ROS_CN = "oasis"
@@ -23,7 +23,7 @@ RDEPENDS:${PN}:append = " \
 do_install:append() {
     # Install systemd services
     install -d "${D}${systemd_system_unitdir}"
-    install -m 0644 "${S}/config/systemd/"*.service "${D}${systemd_system_unitdir}"
+    install -m 0644 "${WORKDIR}/oasis_drivers.service" "${D}${systemd_system_unitdir}"
 
     # Install shell profiles
     install -d "${D}${sysconfdir}/profile.d"
