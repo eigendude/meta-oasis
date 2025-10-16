@@ -20,6 +20,7 @@ export IMAGE_BASENAME = "browser-oasis"
 # Packages
 ################################################################################
 
-IMAGE_INSTALL += " \
-    chromium-ozone-wayland \
+# SmartHome-specific packages
+IMAGE_INSTALL:append = " \
+    packagegroup-oasis \
 "
