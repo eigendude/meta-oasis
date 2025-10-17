@@ -19,3 +19,6 @@ RDEPENDS:${PN}:append = " \
     rclcpp \
     sensor-msgs \
 "
+
+# Disable 'dev-elf' QA for the -dev package (unversioned .so symlink rule)
+INSANE_SKIP:${PN}-dev += "dev-elf"
