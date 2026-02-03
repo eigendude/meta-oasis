@@ -15,9 +15,8 @@ RDEPENDS:${PN}:append = " \
     std-msgs \
 "
 
-# Disable QA checks for -dev package because oasis-msgs-dev is required at runtime
-INSANE_SKIP:${PN} += "dev-deps"
-
-# Disable the dev-elf QA check for the -dev package since our ROS build installs
-# shared libraries as actual files (not symlinks) which are needed at runtime.
-INSANE_SKIP:${PN}-dev = "dev-elf"
+# ROS interface packages install runtime-needed unversioned *.so files. The
+# default packaging logic assigns unversioned shared libs to -dev
+# (FILES_SOLIBSDEV), which then causes ${PN} to rdepend on ${PN}-dev and trips
+# the dev-deps QA check. Disable that behavior for this recipe.
+FILES_SOLIBSDEV = ""

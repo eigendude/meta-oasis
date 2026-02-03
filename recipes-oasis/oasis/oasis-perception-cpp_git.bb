@@ -4,20 +4,19 @@ ROS_CN = "oasis"
 ROS_BPN = "oasis_perception_cpp"
 
 DEPENDS:append = " \
+    apriltag \
+    apriltag-msgs \
     bgslibrary \
     cv-bridge \
+    geometry-msgs \
     image-transport \
+    message-filters \
     oasis-msgs \
+    pcl \
+    pcl-conversions \
     rclcpp \
     sensor-msgs \
-"
-
-RDEPENDS:${PN}:append = " \
-    cv-bridge \
-    image-transport \
-    oasis-msgs \
-    rclcpp \
-    sensor-msgs \
+    std-msgs \
 "
 
 # Disable 'dev-elf' QA for the -dev package (unversioned .so symlink rule)
