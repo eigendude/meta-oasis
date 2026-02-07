@@ -3,6 +3,7 @@ From: Garrett Brown <eigendebugger@gmail.com>
 Date: Mon, 19 Oct 2020 01:27:35 -0700
 Subject: [PATCH] GAPI: Implement RGBA2Gray and GBRA2Gray
 
+Upstream-Status: Inappropriate
 ---
  modules/gapi/include/opencv2/gapi/imgproc.hpp |   40 +
  .../include/opencv2/gapi/imgproc.hpp.orig     | 1085 +++++++++++++++++
