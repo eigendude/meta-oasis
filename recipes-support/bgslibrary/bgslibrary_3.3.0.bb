@@ -6,20 +6,26 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=d2259a5cee4bdd5c7936795c3dd811d7"
 
 SRC_URI = " \
     git://github.com/andrewssobral/bgslibrary.git;protocol=https;branch=master \
-    file://0001-Remove-cv-imshow-calls-inside-of-algorithms.patch \
+    file://0001-Disable-imshow-calls.patch \
+    file://0002-Implement-OpenCV4-required-apply-overload.patch \
 "
-SRCREV = "2a6cd015e100212703cd144ace86f0d3decc41e4"
+
+# Drop the patch for OpenCV 4.13 on Scarthgap
+SRC_URI:remove:scarthgap = "file://0002-Implement-OpenCV4-required-apply-overload.patch"
+
+SRCREV = "4622bc9cded1c5504cec6db47db07b3e3c782ecc"
 
 DEPENDS = " \
     opencv \
 "
 
-S = "${WORKDIR}/git"
+S:scarthgap = "${WORKDIR}/git"
 
 inherit cmake
 
 EXTRA_OECMAKE = " \
     -DBGS_CORE_STATIC=ON \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
 "
 
 FILES:${PN}:append = " \
