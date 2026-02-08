@@ -23,7 +23,7 @@ RDEPENDS:${PN}:append = " \
 do_install:append() {
     # Install systemd services
     install -d "${D}${systemd_system_unitdir}"
-    install -m 0644 "${WORKDIR}/oasis_drivers.service" "${D}${systemd_system_unitdir}"
+    install -m 0644 "${UNPACKDIR}/oasis_drivers.service" "${D}${systemd_system_unitdir}"
 
     # Install shell profiles
     install -d "${D}${sysconfdir}/profile.d"
