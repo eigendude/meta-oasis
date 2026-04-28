@@ -4,12 +4,18 @@ ROS_CN = "oasis"
 ROS_BPN = "oasis_msgs"
 
 DEPENDS:append = " \
+    apriltag-msgs \
+    geometry-msgs \
+    nav-msgs \
     rosidl-default-generators-native \
     sensor-msgs \
     std-msgs \
 "
 
 RDEPENDS:${PN}:append = " \
+    apriltag-msgs \
+    geometry-msgs \
+    nav-msgs \
     rosidl-default-runtime \
     sensor-msgs \
     std-msgs \
