@@ -1,6 +1,6 @@
-# Avoid the clang-backed openmp recipe; use GCC libgomp instead
+# Avoid the clang-backed openmp recipe and GCC-backed libgomp recipe
 PACKAGECONFIG:remove = "openmp"
-PACKAGECONFIG:append = " gomp"
+PACKAGECONFIG:remove = "gomp"
 
 # Disable building tests
 PACKAGECONFIG:remove = "tests"
