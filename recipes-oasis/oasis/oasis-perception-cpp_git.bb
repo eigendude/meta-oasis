@@ -4,6 +4,7 @@ ROS_CN = "oasis"
 ROS_BPN = "oasis_perception_cpp"
 
 DEPENDS:append = " \
+    ament-index-cpp \
     apriltag \
     apriltag-msgs \
     bgslibrary \
@@ -15,6 +16,7 @@ DEPENDS:append = " \
     pcl \
     pcl-conversions \
     rclcpp \
+    rclcpp-components \
     sensor-msgs \
     std-msgs \
 "
