@@ -15,6 +15,7 @@ DEPENDS:append = " \
     rcutils \
     sensor-msgs \
     std-msgs \
+    std-srvs \
     tf2-ros \
     udev \
     yaml-cpp \
