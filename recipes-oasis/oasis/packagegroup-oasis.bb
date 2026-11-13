@@ -16,6 +16,9 @@ RDEPENDS:${PN} = " \
     oasis-perception-py \
 "
 
+# oasis-perception-cpp requires APIs available in Lyrical but missing in Kilted.
+RDEPENDS:${PN}:remove = "${@bb.utils.contains('ROS_DISTRO', 'kilted', 'oasis-perception-cpp', '', d)}"
+
 # Also include the full suite of core ros tools
 RDEPENDS:${PN}:append = " \
     ros-core \
