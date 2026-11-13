@@ -12,7 +12,6 @@ RDEPENDS:${PN} = " \
     oasis-drivers-py \
     oasis-home \
     oasis-msgs \
-    oasis-perception-cpp \
     oasis-perception-py \
 "
 
