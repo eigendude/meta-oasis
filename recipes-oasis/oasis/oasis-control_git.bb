@@ -8,6 +8,7 @@ RDEPENDS:${PN}:append = " \
     message-filters \
     nav-msgs \
     oasis-msgs \
+    python3-numpy \
     sensor-msgs \
     std-msgs \
     tf2-msgs \
