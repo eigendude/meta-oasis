@@ -5,6 +5,10 @@ ROS_BPN = "oasis_perception_py"
 
 inherit systemd
 
+RDEPENDS:${PN}:append = " \
+    python3-numpy \
+"
+
 do_install:append() {
     # Install systemd services
     install -d "${D}${systemd_system_unitdir}"
