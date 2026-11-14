@@ -15,6 +15,7 @@ RDEPENDS:${PN}:append = " \
     oasis-msgs \
     python3-psutil \
     python3-pyserial \
+    python3-telemetrix-aio \
     sensor-msgs \
     std-msgs \
     v4l2-camera \
