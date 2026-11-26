@@ -1,0 +1,13 @@
+[Unit]
+Description=Watch for link and IPv4 address changes affecting DDS
+BindsTo=data.mount
+After=data.mount
+
+[Socket]
+# RTMGRP_LINK (1) and RTMGRP_IPV4_IFADDR (16)
+ListenNetlink=route 17
+TriggerLimitIntervalSec=0
+ExecStopPost=/lib/ufw/oasis-dds close
+
+[Install]
+WantedBy=sockets.target data.mount

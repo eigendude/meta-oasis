@@ -1,0 +1,12 @@
+[Unit]
+Description=Reconcile DDS firewall access on connected private networks
+After=ufw.service
+RequiresMountsFor=/data
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+ExecStart=/lib/ufw/oasis-dds apply
+
+[Install]
+WantedBy=multi-user.target data.mount

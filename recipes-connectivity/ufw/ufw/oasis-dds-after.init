@@ -1,0 +1,5 @@
+#!/bin/sh
+case "$1" in
+    start) exec /lib/ufw/oasis-dds apply ;;
+    stop)  exec /lib/ufw/oasis-dds close ;;
+esac

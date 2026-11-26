@@ -1,0 +1,68 @@
+Subject: [PATCH] Reload the running firewall without writing configuration
+
+The reload command toggles ENABLED and regenerates user rules for logging.
+Use ufw-init force-reload, which already reloads the configured rules and
+runs the framework hooks. This also works on an immutable image.
+
+Upstream-Status: Pending
+
+--- a/src/backend_iptables.py
++++ b/src/backend_iptables.py
+@@ -491,5 +491,12 @@
+     def stop_firewall(self):
+         '''Stop the firewall'''
++        self._run_init('force-stop')
++
++    def reload_firewall(self):
++        '''Reload the installed rules without changing persistent configuration.'''
++        self._run_init('force-reload')
++
++    def _run_init(self, action):
+         if self.dryrun:
+             msg("> " + _("running ufw-init"))
+         else:
+@@ -500,7 +507,7 @@
+                 args.append(self.rootdir)
+                 args.append('--datadir')
+                 args.append(self.datadir)
+-            args.append('force-stop')
++            args.append(action)
+             (rc, out) = cmd(args)
+             if rc != 0:
+                 err_msg = _("problem running ufw-init\n%s" % out)
+@@ -509,21 +516,7 @@
+     def start_firewall(self):
+         '''Start the firewall'''
+-        if self.dryrun:
+-            msg("> " + _("running ufw-init"))
+-        else:
+-            args = []
+-            args.append(self.files['init'])
+-            if self.rootdir is not None and self.datadir is not None:
+-                args.append('--rootdir')
+-                args.append(self.rootdir)
+-                args.append('--datadir')
+-                args.append(self.datadir)
+-            args.append('start')
+-            (rc, out) = cmd(args)
+-            if rc != 0:
+-                err_msg = _("problem running ufw-init\n%s" % out)
+-                raise UFWError(err_msg)
+-
++        self._run_init('start')
++        if not self.dryrun:
+             if 'loglevel' not in self.defaults or \
+                self.defaults['loglevel'] not in list(self.loglevels.keys()):
+                 # Add the loglevel if not valid
+--- a/src/frontend.py
++++ b/src/frontend.py
+@@ -678,8 +678,7 @@
+             res = self.set_enabled(False)
+         elif action == "reload":
+             if self.backend.is_enabled():
+-                self.set_enabled(False)
+-                self.set_enabled(True)
++                self.backend.reload_firewall()
+                 res = _("Firewall reloaded")
+             else:
+                 res = _("Firewall not enabled (skipping reload)")

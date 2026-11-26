@@ -1,0 +1,122 @@
+#!/usr/bin/python3 -IB
+"""Reconcile the IPv4 chain reserved by the OASIS UFW recipe."""
+
+import errno
+import fcntl
+import json
+import os
+from pathlib import Path
+import socket
+import stat
+import subprocess
+import sys
+from ipaddress import IPv4Address, IPv4Network
+
+PRIVATE = tuple(map(IPv4Network, ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16")))
+
+
+def trusted(path, file_type):
+    info = path.lstat()
+    if not file_type(info.st_mode) or info.st_uid != 0 or info.st_mode & 0o022:
+        raise PermissionError(f"unsafe DDS state at {path.absolute()}")
+
+
+def marker_enabled(action):
+    # Pin the directory before checking the mount or looking up the marker.
+    data = os.open("/data", os.O_DIRECTORY | os.O_NOFOLLOW)
+    os.fchdir(data)
+    os.close(data)
+    if not os.path.ismount("."):
+        raise OSError("/data is not mounted")
+    trusted(Path("."), stat.S_ISDIR)
+    directory = Path("oasis")
+    marker = directory / "dds-enabled"
+    if action == "enable":
+        directory.mkdir(mode=0o755, exist_ok=True)
+    try:
+        trusted(directory, stat.S_ISDIR)
+        if action == "disable":
+            marker.unlink(missing_ok=True)
+            return False
+        if action == "enable":
+            try:
+                marker.touch(mode=0o600, exist_ok=False)
+            except FileExistsError:
+                pass
+        trusted(marker, stat.S_ISREG)
+        with marker.open("rb") as stream:
+            stream.read(1)
+    except FileNotFoundError:
+        return False
+    return True
+
+
+def connected_rules():
+    links = json.loads(subprocess.check_output(["ip", "-j", "-4", "address", "show"]))
+    rules = set()
+    for link in links:
+        name = link["ifname"]
+        if "UP" not in link["flags"] or "LOOPBACK" in link["flags"]:
+            continue
+        if link["operstate"] not in ("UP", "UNKNOWN"):
+            continue
+        # iptables treats a trailing '+' as a wildcard. Quote literal interface
+        # names for iptables-restore, including any embedded quotes or backslashes.
+        if name.endswith("+") or not name.isprintable():
+            continue
+        interface = json.dumps(name, ensure_ascii=False)
+        for addr in link["addr_info"]:
+            if addr["scope"] not in ("global", "link"):
+                continue
+            # For point-to-point links the prefix belongs to the remote peer.
+            network = IPv4Network((addr.get("address", addr["local"]), addr["prefixlen"]), strict=False)
+            local = IPv4Address(addr["local"])
+            if any(local in block for block in PRIVATE) and any(network.subnet_of(block) for block in PRIVATE):
+                rules.add(f"-A oasis-dds -i {interface} -s {network} -j ACCEPT")
+    return sorted(rules)
+
+
+def replace_rules(rules):
+    # One filter-table transaction. --noflush preserves every other chain.
+    lines = ["*filter", ":oasis-dds - [0:0]", *rules, "COMMIT"]
+    subprocess.run(["iptables-restore", "--wait", "--noflush"],
+                   input="\n".join(lines) + "\n", encoding="utf-8", check=True)
+
+
+def drain_notifications():
+    if os.getenv("LISTEN_PID") != str(os.getpid()) or os.getenv("LISTEN_FDS") != "1":
+        return
+    # Events arriving after the snapshot must wake the service again.
+    with socket.socket(fileno=3) as events:
+        for _ in range(256):
+            try:
+                events.recv(65536, socket.MSG_DONTWAIT)
+            except BlockingIOError:
+                return
+            except OSError as error:
+                if error.errno != errno.ENOBUFS:
+                    raise
+
+
+def main(action):
+    drain_notifications()
+    with open("/run/oasis-dds.lock", "a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        try:
+            rules = connected_rules() if action != "close" and marker_enabled(action) else []
+            replace_rules(rules)
+        except (OSError, KeyError, ValueError, subprocess.CalledProcessError) as error:
+            replace_rules([])
+            if action == "apply":
+                print(f"DDS closed: {error}", file=sys.stderr)
+                return
+            raise
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2 or sys.argv[1] not in ("enable", "disable", "apply", "close"):
+        sys.exit("Expected enable, disable, apply or close")
+    try:
+        main(sys.argv[1])
+    except (OSError, KeyError, ValueError, subprocess.CalledProcessError) as error:
+        sys.exit(str(error))

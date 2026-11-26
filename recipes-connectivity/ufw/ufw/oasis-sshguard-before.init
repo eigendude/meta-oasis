@@ -1,0 +1,4 @@
+#!/bin/sh
+if [ "$1" = start ]; then
+    iptables -w -S sshguard >/dev/null 2>&1 || iptables -w -N sshguard
+fi
