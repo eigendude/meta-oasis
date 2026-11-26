@@ -5,7 +5,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 # Revision used to retrieve build files
-I2CDEVLIB_REV = "3322c31b8ccbae4e53a25051b93a4c211afc3d26"
+I2CDEVLIB_REV = "337c6de470b720fb39b439d0a6df3796041a3855"
 
 SRC_URI = " \
     git://github.com/jrowberg/i2cdevlib.git;protocol=https;branch=master \
@@ -14,7 +14,7 @@ SRC_URI = " \
 "
 
 SRCREV = "a98805775f5c14b618387742d5ac6ac9c14e215e"
-SRC_URI[cmake.sha256sum]  = "28b91bd6be8b712419a006d9982cb06e5589cccb1026202933be97f1ab1a7398"
+SRC_URI[cmake.sha256sum]  = "6355b15268741a3e5754c0b47d747144ca45a967daaf688df0487ac9c34fd1f9"
 SRC_URI[pkgxml.sha256sum] = "fd060d66a96d6a261035b4808bed8ea0240994b2ae1f0f31b0fea1068ad7acc3"
 
 S:scarthgap = "${WORKDIR}/git"
